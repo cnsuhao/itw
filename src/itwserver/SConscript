@@ -1,0 +1,79 @@
+#--*-- python --*--
+import os, sys
+Import('env')
+env = env.Clone()
+
+
+# -I /include
+include_path = {'CPPPATH' : [
+	'./',
+	'/usr/include'
+]}
+
+# -L /libpath
+lib_path = {'LIBPATH' :	[
+	'./',
+	'/usr/local/lib64/boost'
+]}
+
+link_flags = {'LINKFLAGS' : [
+	'-WL,-rpath=/usr/local/lib/mysql',
+	'-WL,-rpath=/usr/local/lib',
+	'-WL,-rpath=/usr/local/lib64'
+]}
+
+env.MergeFlags(include_path)
+env.MergeFlags(lib_path)
+env.MergeFlags(link_flags)
+
+# -c *.c
+itw_server_source = [
+	Glob('./*.c')
+]
+
+#generate static library
+env.StaticLibrary('main', itw_server_source)
+
+env.Append(LIBS = [
+	'main',
+	'pthread',
+	'rt'
+])
+
+#add
+env.Append(CCFLAGS = [
+	'-static'
+])
+
+env.Program('./itwserver', 'main.cc')
+
+#install an file
+#env.Alias('install', '../../target/bin')
+#env.Install('../../target/bin', itwserver)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
